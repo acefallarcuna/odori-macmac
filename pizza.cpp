@@ -6,15 +6,15 @@ using namespace std;
 int smallQuantity = 10, mediumQuantity = 10, largeQuantity = 10;
 
 int main() {
+        cout << "Welcome to the Pizza Ordering System!" << endl;
     char choice;
     do {
-        cout << "Welcome to the Pizza Ordering System!" << endl;
         cout << "-------------------------------------" << endl;
         // pizza choices
         cout << "Pizza Choices:\n" << endl;
-        cout << "1 for Margherita ($9.99)" << endl;
-        cout << "2 for Pepperoni ($11.99)" << endl;
-        cout << "3 for Supreme ($14.99)\n" << endl;
+        cout << "1 - Margherita ($9.99)" << endl;
+        cout << "2 - Pepperoni ($11.99)" << endl;
+        cout << "3 - Supreme ($14.99)\n" << endl;
 
         // get user input for pizza choice
         cout << "Enter pizza choice (1/2/3): ";
