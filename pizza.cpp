@@ -1,74 +1,113 @@
 #include <iostream>
 #include <iomanip>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-int smallQuantity = 10, mediumQuantity = 10, largeQuantity = 10;
+const int pizzaTypes = 3;
+const int pizzaSizes = 3;
+
+int pizzaQuantities[pizzaTypes][pizzaSizes] = {
+    {10, 10, 10},
+    {10, 10, 10},
+    {10, 10, 10}
+};
+
+struct Topping {
+    string name;
+    double cost;
+};
+
+const int numToppings = 5;
+Topping toppings[numToppings] = {
+    {"PEPPERONI", 1.5},
+    {"MUSHROOMS", 1.5},
+    {"ONIONS", 1.5},
+    {"SAUSAGE", 1.5},
+    {"OLIVES", 1.5}
+};
 
 int main() {
-        cout << "Welcome to the Pizza Ordering System!" << endl;
+    cout << "WELCOME TO THE PIZZA ORDERING SYSTEM!" << endl;
     char choice;
+
     do {
         cout << "-------------------------------------" << endl;
-        // pizza choices
-        cout << "Pizza Choices:\n" << endl;
-        cout << "1 - Margherita ($9.99)" << endl;
-        cout << "2 - Pepperoni ($11.99)" << endl;
-        cout << "3 - Supreme ($14.99)\n" << endl;
 
-        // get user input for pizza choice
-        cout << "Enter pizza choice (1/2/3): ";
+        cout << "PIZZA CHOICES:\n" << endl;
+        cout << "1 - MARGHERITA ($9.99)" << endl;
+        cout << "2 - PEPPERONI ($11.99)" << endl;
+        cout << "3 - SUPREME ($14.99)\n" << endl;
+
         int pizzaChoice;
-        cin >> pizzaChoice;
+        do {
+            cout << "ENTER PIZZA CHOICE (1/2/3): ";
+            cin >> pizzaChoice;
+            if (pizzaChoice < 1 || pizzaChoice > 3) {
+                cout << "INVALID PIZZA CHOICE. PLEASE ENTER A VALID CHOICE (1/2/3)." << endl;
+            }
+        } while (pizzaChoice < 1 || pizzaChoice > 3);
 
-        // pizza sizes
         char size;
 
-        // get user input for pizza size
-        cout << "Select Sizes (S/M/L): ";
-        cin >> size;
+        int sizeIndex;
+        do {
+            cout << "SELECT SIZES (S/M/L): ";
+            cin >> size;
+            switch (size) {
+                case 'S':
+                case 's':
+                    sizeIndex = 0;
+                    cout << "SMALL: ";
+                    break;
+                case 'M':
+                case 'm':
+                    sizeIndex = 1;
+                    cout << "MEDIUM: ";
+                    break;
+                case 'L':
+                case 'l':
+                    sizeIndex = 2;
+                    cout << "LARGE: ";
+                    break;
+                default:
+                    cout << "INVALID SIZE CHOICE. PLEASE ENTER A VALID CHOICE (S/M/L)." << endl;
+                    sizeIndex = -1;
+                    break;
+            }
+        } while (sizeIndex == -1);
 
-        // decrease quantity based on size
-        switch (size) {
-            case 'S':
-            case 's':
-                cout << "Small: " << smallQuantity << " remaining" << endl;
-                smallQuantity--;
-                break;
-            case 'M':
-            case 'm':
-                cout << "Medium: " << mediumQuantity << " remaining" << endl;
-                mediumQuantity--;
-                break;
-            case 'L':
-            case 'l':
-                cout << "Large: " << largeQuantity << " remaining" << endl;
-                largeQuantity--;
-                break;
-            default:
-                cout << "Invalid size choice." << endl;
-                return 1;
+        cout << pizzaQuantities[pizzaChoice - 1][sizeIndex] << " REMAINING" << endl;
+        pizzaQuantities[pizzaChoice - 1][sizeIndex]--;
+        
+        cout << "-------------------------------------" << endl;
+
+        cout << "TOPPINGS MENU:\n" << endl;
+        cout << "1 - PEPPERONI ($1.5)" << endl;
+        cout << "2 - MUSHROOMS ($1.5)" << endl;
+        cout << "3 - ONIONS ($1.5)" << endl;
+        cout << "4 - SAUSAGE ($1.5)" << endl;
+        cout << "5 - OLIVES ($1.5)\n" << endl;
+
+        int toppingQuantity;
+            cout << "ENTER THE NUMBER OF TOPPINGS: ";
+            cin >> toppingQuantity;
+
+        vector<string> selectedToppings;
+        for (int i = 0; i < toppingQuantity; ++i) {
+            int toppingChoice;
+            do {
+                cout << "CHOOSE YOUR TOPPING #" << i + 1 << ": ";
+                cin >> toppingChoice;
+                if (toppingChoice < 1 || toppingChoice > 5) {
+                    cout << "PLEASE ENTER A VALID CHOICE (1-5)." << endl;
+                } else {
+                    selectedToppings.push_back(toppings[toppingChoice - 1].name);
+                }
+            } while (toppingChoice < 1 || toppingChoice > 5);
         }
 
-        cout << "-------------------------------------" << endl;
-        // toppings menu
-        cout << "Toppings Menu:\n" << endl;
-        cout << "1 - Pepperoni ($1.5)" << endl;
-        cout << "2 - Mushrooms ($1.5)" << endl;
-        cout << "3 - Onions ($1.5)" << endl;
-        cout << "4 - Sausage ($1.5)" << endl;
-        cout << "5 - Olives ($1.5)\n" << endl;
-
-        // get user input for toppings and quantity
-        cout << "Choose your toppings (1-5): ";
-        int toppingChoice;
-        cin >> toppingChoice;
-
-        cout << "Enter the quantity: ";
-        int toppingQuantity;
-        cin >> toppingQuantity;
-
-        // calculate total cost
         double pizzaCost;
         switch (pizzaChoice) {
             case 1:
@@ -81,87 +120,81 @@ int main() {
                 pizzaCost = 14.99;
                 break;
             default:
-                cout << "Invalid pizza choice." << endl;
+                cout << "INVALID PIZZA CHOICE." << endl;
                 return 1;
         }
 
-        double toppingCost = 1.5 * toppingQuantity;
+        double toppingCost = 0.0;
+        for (const string& topping : selectedToppings) {
+            for (const Topping& t : toppings) {
+                if (topping == t.name) {
+                    toppingCost += t.cost;
+                    break;
+                }
+            }
+        }
+
         double totalCost = pizzaCost + toppingCost;
 
         cout << "-------------------------------------" << endl;
-        // print receipt
-        cout << "Do you want a receipt? (Y/N): ";
+
+        cout << "DO YOU WANT A RECEIPT? (Y/N): ";
         cin >> choice;
         cout << "-------------------------------------" << endl;
-        
+
         if (toupper(choice) == 'Y') {
-            // details
-            cout << "Receipt:\n" << endl;
-            cout << "Pizza: ";
+
+            cout << "RECEIPT:\n" << endl;
+            cout << "PIZZA: ";
             switch (pizzaChoice) {
                 case 1:
-                    cout << "Margherita";
+                    cout << "MARGHERITA";
                     break;
                 case 2:
-                    cout << "Pepperoni";
+                    cout << "PEPPERONI";
                     break;
                 case 3:
-                    cout << "Supreme";
+                    cout << "SUPREME";
                     break;
                 default:
-                    cout << "Invalid pizza choice.";
+                    cout << "INVALID PIZZA CHOICE.";
                     break;
             }
             cout << endl;
 
-            cout << "Size: ";
+            cout << "SIZE: ";
             switch (size) {
                 case 'S':
                 case 's':
-                    cout << "Small";
+                    cout << "SMALL";
                     break;
                 case 'M':
                 case 'm':
-                    cout << "Medium";
+                    cout << "MEDIUM";
                     break;
                 case 'L':
                 case 'l':
-                    cout << "Large";
+                    cout << "LARGE";
                     break;
                 default:
                     break;
             }
             cout << endl;
 
-            cout << "Toppings: ";
-            switch (toppingChoice) {
-                case 1:
-                    cout << "Pepperoni";
-                    break;
-                case 2:
-                    cout << "Mushrooms";
-                    break;
-                case 3:
-                    cout << "Onions";
-                    break;
-                case 4:
-                    cout << "Sausage";
-                    break;
-                case 5:
-                    cout << "Olives";
-                    break;
-                default:
-                    cout << "Invalid topping choice.";
-                    break;
+            cout << "TOPPINGS: ";
+            for (size_t i = 0; i < selectedToppings.size(); ++i) {
+                cout << selectedToppings[i];
+                if (i < selectedToppings.size() - 1) {
+                    cout << ", ";
+                }
             }
-            cout << " (" << toppingQuantity << " quantity)" << endl;
+            cout << endl;
 
-            cout << "Total Cost: $" << fixed << setprecision(2) << totalCost << endl;
+            cout << "TOTAL COST: $" << fixed << setprecision(2) << totalCost << endl;
             cout << "-------------------------------------" << endl;
         }
 
-        // option to order again
-        cout << "Do you want to order again? (Y/N): ";
+        cout << "DO YOU WANT TO ORDER AGAIN? (Y/N): ";
         cin >> choice;
 
     } while (toupper(choice) == 'Y');
