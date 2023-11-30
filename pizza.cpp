@@ -13,7 +13,7 @@ int main() {
         {10, 10, 10}
     };
 
-    const int numToppings = 10;  // Updated to include the new toppings
+    const int numToppings = 10;
     const string toppings[numToppings] = {"PEPPERONI", "MUSHROOMS", "ONIONS", "SAUSAGE", "OLIVES",
                                           "BELL PEPPERS", "TOMATOES", "BACON", "HAM", "PINEAPPLE"};
 
@@ -121,7 +121,7 @@ int main() {
 
         double toppingCost = 0.0;
         for (int i = 0; i < toppingQuantity; ++i) {
-            toppingCost += 1.5;  // Assuming all toppings have the same cost
+            toppingCost += 1.5;
         }
 
         double totalCost = pizzaCost + toppingCost;
