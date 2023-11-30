@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -34,7 +33,7 @@ public:
     }
 };
 
-void manageEmployeeList(vector<Employee>& employees, bool& newEmployeeAdded) {
+void manageEmployeeList(Employee* employees, int& employeeCount, bool& newEmployeeAdded) {
     cout << "\nEMPLOYEE MANAGEMENT MENU:\n";
     cout << "1. SHOW EMPLOYEE LIST\n";
     cout << "2. ADD NEW EMPLOYEE\n" << endl;
@@ -44,13 +43,13 @@ void manageEmployeeList(vector<Employee>& employees, bool& newEmployeeAdded) {
 
     switch (choice) {
         case '1':
-            if (employees.empty()) {
+            if (employeeCount == 0) {
                 cout << "NO EMPLOYEES IN THE LIST." << endl;
                 cout << "ADD NEW EMPLOYEE" << endl;
             } else {
                 cout << "EMPLOYEE LIST:\n";
-                for (const auto& emp : employees) {
-                    cout << "- " << emp.getName() << "\n";
+                for (int i = 0; i < employeeCount; ++i) {
+                    cout << "- " << employees[i].getName() << "\n";
                 }
             }
             break;
@@ -58,7 +57,7 @@ void manageEmployeeList(vector<Employee>& employees, bool& newEmployeeAdded) {
             string newName;
             cout << "NAME: ";
             cin >> newName;
-            employees.emplace_back(newName);
+            employees[employeeCount++] = Employee(newName);
             cout << "NEW EMPLOYEE ADDED.\n";
             newEmployeeAdded = true;
             break;
@@ -68,42 +67,39 @@ void manageEmployeeList(vector<Employee>& employees, bool& newEmployeeAdded) {
     }
 }
 
+int findEmployeeIndex(const Employee* employees, int employeeCount, const string& name) {
+    for (int i = 0; i < employeeCount; ++i) {
+        if (employees[i].getName() == name) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 int main() {
     cout << "WELCOME TO LEAVE MANAGEMENT SYSTEM" << endl;
     cout << "----------------------------------";
-    vector<Employee> employees;
+    const int maxEmployees = 100;
+    Employee employees[maxEmployees];
+    int employeeCount = 0;
     string name;
     char choice;
 
     do {
         bool newEmployeeAdded = false;
 
-        manageEmployeeList(employees, newEmployeeAdded);
+        manageEmployeeList(employees, employeeCount, newEmployeeAdded);
 
         if (!newEmployeeAdded) {
             cout << "\nNAME: ";
             cin >> name;
         }
 
-        bool employeeExists = false;
-        for (const auto& emp : employees) {
-            if (emp.getName() == name) {
-                employeeExists = true;
-                break;
-            }
-        }
+        int employeeIndex = findEmployeeIndex(employees, employeeCount, name);
 
-        if (!employeeExists && !newEmployeeAdded) {
-            employees.emplace_back(name);
+        if (employeeIndex == -1 && !newEmployeeAdded) {
+            employees[employeeCount++] = Employee(name);
             cout << "NEW EMPLOYEE ADDED.\n";
-        }
-
-        int employeeIndex = -1;
-        for (int i = 0; i < employees.size(); ++i) {
-            if (employees[i].getName() == name) {
-                employeeIndex = i;
-                break;
-            }
         }
 
         cout << "\nEMPLOYEE MENU:\n";
