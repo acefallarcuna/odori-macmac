@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 
 using namespace std;
 
@@ -31,20 +32,28 @@ int main() {
         cout << "3 - SUPREME ($14.99)\n" << endl;
 
         int pizzaChoice;
+        bool invalidInput;
         do {
+            invalidInput = false;
             cout << "ENTER PIZZA CHOICE (1/2/3): ";
             cin >> pizzaChoice;
-            if (pizzaChoice < 1 || pizzaChoice > 3) {
-                cout << "INVALID PIZZA CHOICE. PLEASE ENTER A VALID CHOICE (1/2/3)." << endl;
+
+            if (cin.fail() || pizzaChoice < 1 || pizzaChoice > 3 || cin.peek() != '\n') {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "INVALID INPUT. PLEASE ENTER A SINGLE-DIGIT INTEGER BETWEEN 1 AND 3." << endl;
+                invalidInput = true;
             }
-        } while (pizzaChoice < 1 || pizzaChoice > 3);
+        } while (invalidInput);
 
         char size;
 
         int sizeIndex;
         do {
+            invalidInput = false;
             cout << "SELECT SIZES (S/M/L): ";
             cin >> size;
+
             switch (size) {
                 case 'S':
                 case 's':
@@ -64,9 +73,21 @@ int main() {
                 default:
                     cout << "INVALID SIZE CHOICE. PLEASE ENTER A VALID CHOICE (S/M/L)." << endl;
                     sizeIndex = -1;
+                    invalidInput = true;
                     break;
             }
-        } while (sizeIndex == -1);
+
+            if (cin.peek() != '\n') {
+                cout << "INVALID INPUT. PLEASE ENTER ONLY 'S', 'M', OR 'L'." << endl;
+                invalidInput = true;
+            }
+
+            if (invalidInput) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        } while (sizeIndex == -1 || invalidInput);
+
 
         cout << pizzaQuantities[pizzaChoice - 1][sizeIndex] << " REMAINING" << endl;
         pizzaQuantities[pizzaChoice - 1][sizeIndex]--;
