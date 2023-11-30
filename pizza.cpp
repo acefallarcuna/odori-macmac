@@ -3,32 +3,22 @@
 
 using namespace std;
 
-const int pizzaTypes = 3;
-const int pizzaSizes = 3;
-
-int pizzaQuantities[pizzaTypes][pizzaSizes] = {
-    {10, 10, 10},
-    {10, 10, 10},
-    {10, 10, 10}
-};
-
-struct Topping {
-    string name;
-    double cost;
-};
-
-const int numToppings = 5;
-Topping toppings[numToppings] = {
-    {"PEPPERONI", 1.5},
-    {"MUSHROOMS", 1.5},
-    {"ONIONS", 1.5},
-    {"SAUSAGE", 1.5},
-    {"OLIVES", 1.5}
-};
-
-const int maxToppings = 5;
-
 int main() {
+    const int pizzaTypes = 3;
+    const int pizzaSizes = 3;
+
+    int pizzaQuantities[pizzaTypes][pizzaSizes] = {
+        {10, 10, 10},
+        {10, 10, 10},
+        {10, 10, 10}
+    };
+
+    const int numToppings = 10;  // Updated to include the new toppings
+    const string toppings[numToppings] = {"PEPPERONI", "MUSHROOMS", "ONIONS", "SAUSAGE", "OLIVES",
+                                          "BELL PEPPERS", "TOMATOES", "BACON", "HAM", "PINEAPPLE"};
+
+    const int maxToppings = 5;
+
     cout << "WELCOME TO THE PIZZA ORDERING SYSTEM!" << endl;
     char choice;
 
@@ -88,7 +78,12 @@ int main() {
         cout << "2 - MUSHROOMS ($1.5)" << endl;
         cout << "3 - ONIONS ($1.5)" << endl;
         cout << "4 - SAUSAGE ($1.5)" << endl;
-        cout << "5 - OLIVES ($1.5)\n" << endl;
+        cout << "5 - OLIVES ($1.5)" << endl;
+        cout << "6 - BELL PEPPERS ($1.5)" << endl;
+        cout << "7 - TOMATOES ($1.5)" << endl;
+        cout << "8 - BACON ($1.5)" << endl;
+        cout << "9 - HAM ($1.5)" << endl;
+        cout << "10 - PINEAPPLE ($1.5)\n" << endl;
 
         int toppingQuantity;
         cout << "ENTER THE NUMBER OF TOPPINGS: ";
@@ -100,12 +95,12 @@ int main() {
             do {
                 cout << "CHOOSE YOUR TOPPING #" << i + 1 << ": ";
                 cin >> toppingChoice;
-                if (toppingChoice < 1 || toppingChoice > 5) {
-                    cout << "PLEASE ENTER A VALID CHOICE (1-5)." << endl;
+                if (toppingChoice < 1 || toppingChoice > numToppings) {
+                    cout << "PLEASE ENTER A VALID CHOICE (1-" << numToppings << ")." << endl;
                 } else {
-                    selectedToppings[i] = toppings[toppingChoice - 1].name;
+                    selectedToppings[i] = toppings[toppingChoice - 1];
                 }
-            } while (toppingChoice < 1 || toppingChoice > 5);
+            } while (toppingChoice < 1 || toppingChoice > numToppings);
         }
 
         double pizzaCost;
@@ -126,12 +121,7 @@ int main() {
 
         double toppingCost = 0.0;
         for (int i = 0; i < toppingQuantity; ++i) {
-            for (const Topping& t : toppings) {
-                if (selectedToppings[i] == t.name) {
-                    toppingCost += t.cost;
-                    break;
-                }
-            }
+            toppingCost += 1.5;  // Assuming all toppings have the same cost
         }
 
         double totalCost = pizzaCost + toppingCost;
