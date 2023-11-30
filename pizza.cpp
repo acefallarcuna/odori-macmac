@@ -1,6 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <vector>
 #include <string>
 
 using namespace std;
@@ -27,6 +25,8 @@ Topping toppings[numToppings] = {
     {"SAUSAGE", 1.5},
     {"OLIVES", 1.5}
 };
+
+const int maxToppings = 5;
 
 int main() {
     cout << "WELCOME TO THE PIZZA ORDERING SYSTEM!" << endl;
@@ -91,10 +91,10 @@ int main() {
         cout << "5 - OLIVES ($1.5)\n" << endl;
 
         int toppingQuantity;
-            cout << "ENTER THE NUMBER OF TOPPINGS: ";
-            cin >> toppingQuantity;
+        cout << "ENTER THE NUMBER OF TOPPINGS: ";
+        cin >> toppingQuantity;
 
-        vector<string> selectedToppings;
+        string selectedToppings[maxToppings];
         for (int i = 0; i < toppingQuantity; ++i) {
             int toppingChoice;
             do {
@@ -103,7 +103,7 @@ int main() {
                 if (toppingChoice < 1 || toppingChoice > 5) {
                     cout << "PLEASE ENTER A VALID CHOICE (1-5)." << endl;
                 } else {
-                    selectedToppings.push_back(toppings[toppingChoice - 1].name);
+                    selectedToppings[i] = toppings[toppingChoice - 1].name;
                 }
             } while (toppingChoice < 1 || toppingChoice > 5);
         }
@@ -125,9 +125,9 @@ int main() {
         }
 
         double toppingCost = 0.0;
-        for (const string& topping : selectedToppings) {
+        for (int i = 0; i < toppingQuantity; ++i) {
             for (const Topping& t : toppings) {
-                if (topping == t.name) {
+                if (selectedToppings[i] == t.name) {
                     toppingCost += t.cost;
                     break;
                 }
@@ -182,15 +182,15 @@ int main() {
             cout << endl;
 
             cout << "TOPPINGS: ";
-            for (size_t i = 0; i < selectedToppings.size(); ++i) {
+            for (int i = 0; i < toppingQuantity; ++i) {
                 cout << selectedToppings[i];
-                if (i < selectedToppings.size() - 1) {
+                if (i < toppingQuantity - 1) {
                     cout << ", ";
                 }
             }
             cout << endl;
 
-            cout << "TOTAL COST: $" << fixed << setprecision(2) << totalCost << endl;
+            cout << "TOTAL COST: $" << totalCost << endl;
             cout << "-------------------------------------" << endl;
         }
 
