@@ -22,6 +22,7 @@ int main() {
 
     cout << "WELCOME TO THE PIZZA ORDERING SYSTEM!" << endl;
     char choice;
+    char orderAgainChoice;
 
     do {
         cout << "-------------------------------------" << endl;
@@ -106,9 +107,21 @@ int main() {
         cout << "9 - HAM ($1.5)" << endl;
         cout << "10 - PINEAPPLE ($1.5)\n" << endl;
 
+        const int maxToppings = 5;
+
         int toppingQuantity;
-        cout << "ENTER THE NUMBER OF TOPPINGS: ";
-        cin >> toppingQuantity;
+        do {
+            invalidInput = false;
+            cout << "ENTER THE NUMBER OF TOPPINGS (UP TO " << maxToppings << "): ";
+            cin >> toppingQuantity;
+
+            if (cin.fail() || toppingQuantity < 1 || toppingQuantity > maxToppings || cin.peek() != '\n') {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "INVALID INPUT. PLEASE ENTER AN INTEGER BETWEEN 1 AND " << maxToppings << "." << endl;
+                invalidInput = true;
+            }
+        }   while (invalidInput);
 
         string selectedToppings[maxToppings];
         for (int i = 0; i < toppingQuantity; ++i) {
@@ -149,12 +162,24 @@ int main() {
 
         cout << "-------------------------------------" << endl;
 
-        cout << "DO YOU WANT A RECEIPT? (Y/N): ";
-        cin >> choice;
+        char choice;
+        do {
+            invalidInput = false;
+            cout << "DO YOU WANT A RECEIPT? (Y/N): ";
+            cin >> choice;
+
+            if ((choice != 'Y' && choice != 'y' && choice != 'N' && choice != 'n') || cin.peek() != '\n') {
+                cout << "INVALID INPUT. PLEASE ENTER 'Y' FOR YES OR 'N' FOR NO." << endl;
+                invalidInput = true;
+
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        }   while (invalidInput);
+
         cout << "-------------------------------------" << endl;
 
         if (toupper(choice) == 'Y') {
-
             cout << "RECEIPT:\n" << endl;
             cout << "PIZZA: ";
             switch (pizzaChoice) {
@@ -205,10 +230,21 @@ int main() {
             cout << "-------------------------------------" << endl;
         }
 
-        cout << "DO YOU WANT TO ORDER AGAIN? (Y/N): ";
-        cin >> choice;
+        do {
+            invalidInput = false;
+            cout << "DO YOU WANT TO ORDER AGAIN? (Y/N): ";
+            cin >> orderAgainChoice;
 
-    } while (toupper(choice) == 'Y');
+            if ((orderAgainChoice != 'Y' && orderAgainChoice != 'y' && orderAgainChoice != 'N' && orderAgainChoice != 'n') || cin.peek() != '\n') {
+                cout << "INVALID INPUT. PLEASE ENTER 'Y' FOR YES OR 'N' FOR NO." << endl;
+                invalidInput = true;
+
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        }   while (invalidInput);
+
+        }   while (toupper(orderAgainChoice) == 'Y');
 
     return 0;
 }
