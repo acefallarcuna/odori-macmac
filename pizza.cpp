@@ -30,22 +30,28 @@ int main() {
         cout << "PIZZA CHOICES:\n" << endl;
         cout << "1 - MARGHERITA ($9.99)" << endl;
         cout << "2 - PEPPERONI ($11.99)" << endl;
-        cout << "3 - SUPREME ($14.99)\n" << endl;
+        cout << "3 - SUPREME ($14.99)" << endl;
+        cout << "0 - CANCEL ORDER\n" << endl;
 
         int pizzaChoice;
         bool invalidInput;
         do {
             invalidInput = false;
-            cout << "ENTER PIZZA CHOICE (1/2/3): ";
+            cout << "ENTER PIZZA CHOICE (0/1/2/3): ";
             cin >> pizzaChoice;
 
-            if (cin.fail() || pizzaChoice < 1 || pizzaChoice > 3 || cin.peek() != '\n') {
+            if (cin.fail() || pizzaChoice < 0 || pizzaChoice > 3 || cin.peek() != '\n') {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "INVALID INPUT. PLEASE ENTER A SINGLE-DIGIT INTEGER BETWEEN 1 AND 3." << endl;
+                cout << "INVALID INPUT. PLEASE ENTER A SINGLE-DIGIT INTEGER BETWEEN 0 AND 3." << endl;
                 invalidInput = true;
             }
-        } while (invalidInput);
+        }   while (invalidInput);
+
+        if (pizzaChoice == 0) {
+            cout << "ORDER CANCELLED. THANK YOU!" << endl;
+            break;
+        }
 
         char size;
 
