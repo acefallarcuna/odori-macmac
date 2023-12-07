@@ -20,7 +20,16 @@ int main() {
 
     const int maxToppings = 5;
 
-    double pizzaPrices[pizzaSizes] = {8.99, 10.99, 13.99};
+    struct Pizza {
+        string name;
+        double prices[pizzaSizes];
+    };
+
+    Pizza pizzas[pizzaTypes] = {
+        {"MARGHERITA (8.99, 10.99, 12.99)", {8.99, 10.99, 12.99}},
+        {"PEPPERONI (9.99, 11.99, 13.99)", {9.99, 11.99, 13.99}},
+        {"SUPREME (10.99, 12.99, 14.99)", {10.99, 12.99, 14.99}}
+    };
 
     cout << "WELCOME TO THE PIZZA ORDERING SYSTEM!" << endl;
     char orderAgainChoice;
@@ -28,24 +37,12 @@ int main() {
     do {
         cout << "---------------------------------------" << endl;
 
-        cout << "PIZZA CHOICES:\n" << endl;
-        for (int i = 1; i <= pizzaTypes; ++i) {
-            cout << i << " - ";
-            switch (i) {
-                case 1:
-                    cout << "MARGHERITA";
-                    break;
-                case 2:
-                    cout << "PEPPERONI";
-                    break;
-                case 3:
-                    cout << "SUPREME";
-                    break;
-                default:
-                    cout << "INVALID PIZZA CHOICE.";
-                    break;
+        for (int i = 0; i < pizzaTypes; ++i) {
+            int totalQuantity = 0;
+            for (int j = 0; j < pizzaSizes; ++j) {
+                totalQuantity += pizzaQuantities[i][j];
             }
-            cout << " - QUANTITY: " << pizzaQuantities[i - 1][0] + pizzaQuantities[i - 1][1] + pizzaQuantities[i - 1][2] << endl;
+            cout << i + 1 << " - " << pizzas[i].name << " - QUANTITY: " << totalQuantity << endl;
         }
         cout << "0 - CANCEL ORDER\n" << endl;
 
@@ -62,7 +59,7 @@ int main() {
                 cout << "INVALID INPUT. PLEASE ENTER A SINGLE-DIGIT INTEGER BETWEEN 0 AND 3." << endl;
                 invalidInput = true;
             }
-        }   while (invalidInput);
+        } while (invalidInput);
 
         if (pizzaChoice == 0) {
             cout << "ORDER CANCELLED. THANK YOU!" << endl;
@@ -74,28 +71,27 @@ int main() {
         int sizeIndex;
         do {
             invalidInput = false;
-            
+        
             cout << "---------------------------------------" << endl;
-            cout << "S - SMALL ($8.99) - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][0] << endl;
-            cout << "M - MEDIUM ($10.99) - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][1] << endl;
-            cout << "L - LARGE ($13.99) - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][2] << endl;
+            cout << "S - SMALL ($" << pizzas[pizzaChoice - 1].prices[0] << ") - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][0] << endl;
+            cout << "M - MEDIUM ($" << pizzas[pizzaChoice - 1].prices[1] << ") - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][1] << endl;
+            cout << "L - LARGE ($" << pizzas[pizzaChoice - 1].prices[2] << ") - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][2] << endl;
             cout << "\nSELECT SIZES (S/M/L): ";
-
+        
             cin >> size;
-
+        
+            size = toupper(size);
+        
             switch (size) {
                 case 'S':
-                case 's':
                     sizeIndex = 0;
                     cout << "SMALL: ";
                     break;
                 case 'M':
-                case 'm':
                     sizeIndex = 1;
                     cout << "MEDIUM: ";
                     break;
                 case 'L':
-                case 'l':
                     sizeIndex = 2;
                     cout << "LARGE: ";
                     break;
@@ -105,12 +101,12 @@ int main() {
                     invalidInput = true;
                     break;
             }
-
+        
             if (cin.peek() != '\n') {
                 cout << "INVALID INPUT. PLEASE ENTER ONLY 'S', 'M', OR 'L'." << endl;
                 invalidInput = true;
             }
-
+        
             if (invalidInput) {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -123,16 +119,10 @@ int main() {
         cout << "---------------------------------------" << endl;
 
         cout << "TOPPINGS MENU:\n" << endl;
-        cout << "1 - PEPPERONI ($1.5)" << endl;
-        cout << "2 - MUSHROOMS ($1.5)" << endl;
-        cout << "3 - ONIONS ($1.5)" << endl;
-        cout << "4 - SAUSAGE ($1.5)" << endl;
-        cout << "5 - OLIVES ($1.5)" << endl;
-        cout << "6 - BELL PEPPERS ($1.5)" << endl;
-        cout << "7 - TOMATOES ($1.5)" << endl;
-        cout << "8 - BACON ($1.5)" << endl;
-        cout << "9 - HAM ($1.5)" << endl;
-        cout << "10 - PINEAPPLE ($1.5)\n" << endl;
+        for (int i = 0; i < numToppings; ++i) {
+            cout << i + 1 << " - " << toppings[i] << " ($1.5)" << endl;
+        }
+        cout << endl;
 
         int toppingQuantity;
         do {
@@ -146,7 +136,7 @@ int main() {
                 cout << "INVALID INPUT. PLEASE ENTER AN INTEGER BETWEEN 1 AND " << maxToppings << "." << endl;
                 invalidInput = true;
             }
-        }   while (invalidInput);
+        } while (invalidInput);
 
         string selectedToppings[maxToppings];
         for (int i = 0; i < toppingQuantity; ++i) {
@@ -162,7 +152,7 @@ int main() {
             } while (toppingChoice < 1 || toppingChoice > numToppings);
         }
 
-        double pizzaCost = pizzaPrices[sizeIndex];
+        double pizzaCost = pizzas[pizzaChoice - 1].prices[sizeIndex];
         double toppingCost = 1.5 * toppingQuantity;
         double totalCost = pizzaCost + toppingCost;
 
@@ -181,48 +171,15 @@ int main() {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
-        }   while (invalidInput);
+        } while (invalidInput);
 
         cout << "-------------------------------------" << endl;
 
         if (toupper(choice) == 'Y') {
             cout << "RECEIPT:\n" << endl;
-            cout << "PIZZA: ";
-            switch (pizzaChoice) {
-                case 1:
-                    cout << "MARGHERITA";
-                    break;
-                case 2:
-                    cout << "PEPPERONI";
-                    break;
-                case 3:
-                    cout << "SUPREME";
-                    break;
-                default:
-                    cout << "INVALID PIZZA CHOICE.";
-                    break;
-            }
-            cout << endl;
-
-            cout << "SIZE: ";
-            switch (size) {
-                case 'S':
-                case 's':
-                    cout << "SMALL";
-                    break;
-                case 'M':
-                case 'm':
-                    cout << "MEDIUM";
-                    break;
-                case 'L':
-                case 'l':
-                    cout << "LARGE";
-                    break;
-                default:
-                    break;
-            }
-            cout << endl;
-
+            cout << "PIZZA: " << pizzas[pizzaChoice - 1].name << endl;
+            cout << "SIZE: " << size << " (COST: $" << pizzas[pizzaChoice - 1].prices[sizeIndex] << ")" << endl;
+            
             cout << "TOPPINGS: ";
             for (int i = 0; i < toppingQuantity; ++i) {
                 cout << selectedToppings[i];
@@ -231,7 +188,7 @@ int main() {
                 }
             }
             cout << endl;
-
+            
             cout << "TOTAL COST: $" << totalCost << endl;
             cout << "---------------------------------------" << endl;
         }
@@ -248,9 +205,9 @@ int main() {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
-        }   while (invalidInput);
+        } while (invalidInput);
 
-    }   while (toupper(orderAgainChoice) == 'Y');
+    } while (toupper(orderAgainChoice) == 'Y');
 
     return 0;
 }
