@@ -20,17 +20,33 @@ int main() {
 
     const int maxToppings = 5;
 
+    double pizzaPrices[pizzaSizes] = {8.99, 10.99, 13.99};
+
     cout << "WELCOME TO THE PIZZA ORDERING SYSTEM!" << endl;
-    char choice;
     char orderAgainChoice;
 
     do {
-        cout << "-------------------------------------" << endl;
+        cout << "---------------------------------------" << endl;
 
         cout << "PIZZA CHOICES:\n" << endl;
-        cout << "1 - MARGHERITA ($9.99)" << endl;
-        cout << "2 - PEPPERONI ($11.99)" << endl;
-        cout << "3 - SUPREME ($14.99)" << endl;
+        for (int i = 1; i <= pizzaTypes; ++i) {
+            cout << i << " - ";
+            switch (i) {
+                case 1:
+                    cout << "MARGHERITA";
+                    break;
+                case 2:
+                    cout << "PEPPERONI";
+                    break;
+                case 3:
+                    cout << "SUPREME";
+                    break;
+                default:
+                    cout << "INVALID PIZZA CHOICE.";
+                    break;
+            }
+            cout << " - QUANTITY: " << pizzaQuantities[i - 1][0] + pizzaQuantities[i - 1][1] + pizzaQuantities[i - 1][2] << endl;
+        }
         cout << "0 - CANCEL ORDER\n" << endl;
 
         int pizzaChoice;
@@ -58,7 +74,13 @@ int main() {
         int sizeIndex;
         do {
             invalidInput = false;
-            cout << "SELECT SIZES (S/M/L): ";
+            
+            cout << "---------------------------------------" << endl;
+            cout << "S - SMALL ($8.99) - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][0] << endl;
+            cout << "M - MEDIUM ($10.99) - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][1] << endl;
+            cout << "L - LARGE ($13.99) - QUANTITY: " << pizzaQuantities[pizzaChoice - 1][2] << endl;
+            cout << "\nSELECT SIZES (S/M/L): ";
+
             cin >> size;
 
             switch (size) {
@@ -95,11 +117,10 @@ int main() {
             }
         } while (sizeIndex == -1 || invalidInput);
 
-
         cout << pizzaQuantities[pizzaChoice - 1][sizeIndex] << " REMAINING" << endl;
         pizzaQuantities[pizzaChoice - 1][sizeIndex]--;
-        
-        cout << "-------------------------------------" << endl;
+
+        cout << "---------------------------------------" << endl;
 
         cout << "TOPPINGS MENU:\n" << endl;
         cout << "1 - PEPPERONI ($1.5)" << endl;
@@ -112,8 +133,6 @@ int main() {
         cout << "8 - BACON ($1.5)" << endl;
         cout << "9 - HAM ($1.5)" << endl;
         cout << "10 - PINEAPPLE ($1.5)\n" << endl;
-
-        const int maxToppings = 5;
 
         int toppingQuantity;
         do {
@@ -143,30 +162,11 @@ int main() {
             } while (toppingChoice < 1 || toppingChoice > numToppings);
         }
 
-        double pizzaCost;
-        switch (pizzaChoice) {
-            case 1:
-                pizzaCost = 9.99;
-                break;
-            case 2:
-                pizzaCost = 11.99;
-                break;
-            case 3:
-                pizzaCost = 14.99;
-                break;
-            default:
-                cout << "INVALID PIZZA CHOICE." << endl;
-                return 1;
-        }
-
-        double toppingCost = 0.0;
-        for (int i = 0; i < toppingQuantity; ++i) {
-            toppingCost += 1.5;
-        }
-
+        double pizzaCost = pizzaPrices[sizeIndex];
+        double toppingCost = 1.5 * toppingQuantity;
         double totalCost = pizzaCost + toppingCost;
 
-        cout << "-------------------------------------" << endl;
+        cout << "---------------------------------------" << endl;
 
         char choice;
         do {
@@ -233,7 +233,7 @@ int main() {
             cout << endl;
 
             cout << "TOTAL COST: $" << totalCost << endl;
-            cout << "-------------------------------------" << endl;
+            cout << "---------------------------------------" << endl;
         }
 
         do {
@@ -250,7 +250,7 @@ int main() {
             }
         }   while (invalidInput);
 
-        }   while (toupper(orderAgainChoice) == 'Y');
+    }   while (toupper(orderAgainChoice) == 'Y');
 
     return 0;
 }
