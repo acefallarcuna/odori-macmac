@@ -10,6 +10,8 @@ private:
     int leavesTaken;
 
 public:
+    Employee() : name(""), totalLeaves(20), leavesTaken(0) {}
+
     Employee(const std::string& n) : name(n), totalLeaves(20), leavesTaken(0) {}
 
     const std::string& getName() const {
@@ -44,12 +46,12 @@ void manageEmployeeList(Employee* employees, int& employeeCount, bool& newEmploy
     switch (choice) {
         case '1':
             if (employeeCount == 0) {
-                cout << "NO EMPLOYEES IN THE LIST." << endl;
-                cout << "ADD NEW EMPLOYEE" << endl;
+                cout << "NO EMPLOYEES IN THE LIST. ADD NEW EMPLOYEE FIRST." << endl;
+                newEmployeeAdded = true;
             } else {
                 cout << "EMPLOYEE LIST:\n";
                 for (int i = 0; i < employeeCount; ++i) {
-                    cout << "- " << employees[i].getName() << "\n";
+                    cout << i + 1 << ". " << employees[i].getName() << "\n";
                 }
             }
             break;
@@ -67,64 +69,59 @@ void manageEmployeeList(Employee* employees, int& employeeCount, bool& newEmploy
     }
 }
 
-int findEmployeeIndex(const Employee* employees, int employeeCount, const string& name) {
-    for (int i = 0; i < employeeCount; ++i) {
-        if (employees[i].getName() == name) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 int main() {
     cout << "WELCOME TO LEAVE MANAGEMENT SYSTEM" << endl;
     cout << "----------------------------------";
     const int maxEmployees = 100;
+
     Employee employees[maxEmployees];
+
     int employeeCount = 0;
-    string name;
     char choice;
 
     do {
         bool newEmployeeAdded = false;
+        string name;
 
         manageEmployeeList(employees, employeeCount, newEmployeeAdded);
 
         if (!newEmployeeAdded) {
-            cout << "\nNAME: ";
-            cin >> name;
-        }
+            if (employeeCount > 0) {
+                cout << "\nSELECT EMPLOYEE BY INDEX: ";
+                int selectedIndex;
+                cin >> selectedIndex;
 
-        int employeeIndex = findEmployeeIndex(employees, employeeCount, name);
+                if (selectedIndex >= 1 && selectedIndex <= employeeCount) {
+                    int employeeIndex = selectedIndex - 1;
 
-        if (employeeIndex == -1 && !newEmployeeAdded) {
-            employees[employeeCount++] = Employee(name);
-            cout << "NEW EMPLOYEE ADDED.\n";
-        }
+                    cout << "\nEMPLOYEE MENU:\n";
+                    cout << "1. REQUEST LEAVE\n";
+                    cout << "2. DISPLAY LEAVE DETAILS\n";
+                    cout << "3. EXIT\n" << endl;
+                    cout << "ENTER YOUR CHOICE: ";
+                    cin >> choice;
 
-        cout << "\nEMPLOYEE MENU:\n";
-        cout << "1. REQUEST LEAVE\n";
-        cout << "2. DISPLAY LEAVE DETAILS\n";
-        cout << "3. EXIT\n" << endl;
-        cout << "ENTER YOUR CHOICE: ";
-        cin >> choice;
-
-        switch (choice) {
-            case '1': {
-                int days;
-                cout << "ENTER THE NUMBER OF DAYS FOR LEAVE: ";
-                cin >> days;
-                employees[employeeIndex].requestLeave(days);
-                break;
+                    switch (choice) {
+                        case '1': {
+                            int days;
+                            cout << "ENTER THE NUMBER OF DAYS FOR LEAVE: ";
+                            cin >> days;
+                            employees[employeeIndex].requestLeave(days);
+                            break;
+                        }
+                        case '2':
+                            employees[employeeIndex].displayDetails();
+                            break;
+                        case '3':
+                            cout << "EXITING...\n";
+                            break;
+                        default:
+                            cout << "INVALID CHOICE. PLEASE TRY AGAIN.\n";
+                    }
+                } else {
+                    cout << "INVALID INDEX. PLEASE TRY AGAIN.\n";
+                }
             }
-            case '2':
-                employees[employeeIndex].displayDetails();
-                break;
-            case '3':
-                cout << "EXITING...\n";
-                break;
-            default:
-                cout << "INVALID CHOICE. PLEASE TRY AGAIN.\n";
         }
 
         cout << "GO BACK TO EMPLOYEE MANAGEMENT MENU (Y/N): ";
